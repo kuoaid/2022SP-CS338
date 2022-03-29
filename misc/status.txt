@@ -1,4 +1,3 @@
 Kuo Wang
 
-- I have successfully downloaded everything. I'm awaiting the key to the vm.
-- Things should work well with my Ubuntu machine.
+- All done with VM.
