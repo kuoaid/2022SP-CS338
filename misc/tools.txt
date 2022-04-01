@@ -1,0 +1,32 @@
+What's your computer's IP address for its current Internet connection? (0-point bonus: how can you tell the difference between your Ethernet IP and your wireless IP if you have both connections active?)
+ifconfig
+
+How can you determine the IP address associated with a given host name?
+ping [hostname]
+Or
+hostname -f
+
+How can you determine the host name(s) associated with a given IP address?
+host [ip]
+Or
+nslookup [ip]
+
+How can you copy a file from one computer to another? Or more to the point, if you create a file on the Kali virtual machine and you want to put it someplace where you can save it, like your your account on mantis.mathcs.carleton.edu, how do you go about it from the Kali command-line interface?
+using secure copy:
+scp [from here] [to here(format: username@server-domain.com:location_path)]
+
+How can you tell whether there's a process listening on a given port (e.g. port 80 or port 22)?
+netstat -anp | grep ":[port]"
+
+How can you tell which ports have processes listening on them on a given host?
+netstat -anp | grep '[hostname]'
+
+How can you retrieve and save a given web page (say https://google.com/ or https://carleton.edu/) in a file on your system?
+wget -r [page address]
+
+How can you view the HTTP headers sent back from a specified web server when you request one of its pages?
+curl -I [address]
+
+How can you view the HTTP headers that your computer sends to the web server when you do the tasks in the previous two questions?
+curl -v [address]
+and find the > lines
