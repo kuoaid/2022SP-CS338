@@ -1,0 +1,53 @@
+Kuo
+
+====== DAYTIME ======
+1. 
+    1	0.000000000	172.16.34.128	129.6.15.28	TCP	74	41588 → 13 [SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM=1 TSval=681277464 TSecr=0 WS=128
+    2	0.125745399	129.6.15.28	172.16.34.128	TCP	60	13 → 41588 [SYN, ACK] Seq=0 Ack=1 Win=64240 Len=0 MSS=1460
+    3	0.125804259	172.16.34.128	129.6.15.28	TCP	54	41588 → 13 [ACK] Seq=1 Ack=1 Win=64240 Len=0
+
+2. Port 13. The client needs a port so that the process has a dedicated gateway to communicate with the network.
+
+3.
+    4	0.228116218	129.6.15.28	172.16.34.128	DAYTIME	105	DAYTIME Response4. 
+
+4. 
+    Daytime Protocol
+        Type: Response
+        Daytime: \n59672 22-04-03 19:28:54 50 0 0 942.9 UTC(NIST) * \n
+
+    \n are newline
+    59672 is time elapsed since Modified Julian Day for systems that keep time as time past some epoch
+    22-04-03 is YY-mm-dd date format
+    19:28:54 is hh:mm:ss time format
+    50 is DST, daylight saving time flag
+    0 is LS leap second flag
+    0 is H, the health of server
+    942.9 is time advance. It's the time taken by the packet to travel from the server to the client.
+    UTC(NIST) is the time zone and service provider
+    * is there for ACTS format compatibility
+
+    SOURCE: https://tf.nist.gov/general/pdf/1046.pdf
+
+5. SYN means synchronize. This marks a tcp packet sent to another machine requesting a connection to be established.
+
+6. ACK means acknowledge. This confirms  that the other side has received an SYN packet.
+
+7. FIN means finish. This marks the end of the data transmission operation.
+
+8. The source of the first FIN packet is 129.6.15.28, so the NIST server initiated the closing.
+
+===== HTTP =====
+
+1. There are 76 TCP connections opened.
+
+2. The request is a HTTP GET request:
+    7	0.095940694	172.16.34.128	45.79.89.123	HTTP	395	GET /index.html HTTP/1.1 
+
+3. Photo graph is also requested through HTTP GET request:
+    11	0.261683036	172.16.34.128	45.79.89.123	HTTP	364	GET /jeff_square_head.jpg HTTP/1.1 
+
+===== QUESTIONS =====
+
+1. I wonder what TCP keep-alive is?
+2. What does "telepathy" menu do?
