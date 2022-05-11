@@ -17,22 +17,24 @@ Time per password cracked: 1261.6558918158214 seconds
 Passwords cracked per number of hashes computed: 1.295138602279513e-07
 
 Part 3
-Total time: [user time from a "time" command]
-Number of hashes computed: [count of the # of hashes computed] 
-Passwords cracked: [number cracked]
-Time per hash computed: [seconds per hash]
-Time per password cracked: [seconds per password]
-Passwords cracked per number of hashes computed: [passwords per hash]
+Total time: 0.004sec
+Number of hashes computed: 1
+Passwords cracked: 1
+Time per hash computed: 0.0 sec (almost instant)
+Time per password cracked: 0.004sec
+Passwords cracked per number of hashes computed: 1
 
 Analysis:
 
 - Did your time per hash computed change between phases? By what factor? Why?
 Yes, by a small factor (2 between p1 and p2). This is because that the SHA256 
 hashing function's runtime itself is largely similar.
+Phase 3 was significantly faster, probably because my program did not engage in any disk I/O.
 
 - Did your time per password crack change between phases? By what factor? Why?
 Yes, by a factor of 31,525. This is because each password has greater entropy,
 and the entropy makes the brute force program go through many more possibilities.
+Phase 3 was faster by 10 times, probably because my program didn't do any disk I/O.
 
 - Suppose you wanted to precompute all the possible password hashes for each
 so you could just look up the password in a table indexed by the hash. How much
@@ -42,7 +44,8 @@ For phase 1, we have 267751 passwords so 267751*(32+16+32)=21.42008 MB
 
 For phase 2, we have 267751*267751 passwords so 267751*267751*(32+16+32)=5 735.24784 GB
 
-For phase 3, we have 267751*16^8 passwords so 267751*16^8*(32+16+32) = 91.9985431 PB
+For phase 3, we have 267751 passwords but each password has the salt that occupies 
+4*8bits=4bytes so 267751*(32+16+32+4) = 22.49 MB
 
 - Give 3-4 reasons we should store password hashes and not the passwords themselves.
 Think in terms of threats, who the attackers might be, etc.

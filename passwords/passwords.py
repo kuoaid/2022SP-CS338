@@ -9,6 +9,7 @@ from hmac import digest
 from threading import Thread
 import math
 import time
+from unittest import result
 
 def encodeToSHA256(plain):
     encoded_password = plain.encode('utf-8')
@@ -125,6 +126,7 @@ def decode(pwFilename, potentialPWFilename, resultsFilename):
     print("crackedPW/Hash: "+str(SUCCESS_CRACKS/howManyHashes))
 
 def verbatimGuess(pwFilename,potentialPWFilename,resultsFilename):
+    global SUCCESS_CRACKS
     pwToBeCracked = open(pwFilename,"r")
     for line in pwToBeCracked:
         current = line.strip().lower().split(":")
@@ -136,35 +138,64 @@ def verbatimGuess(pwFilename,potentialPWFilename,resultsFilename):
         for line2 in ref:
             print(line2)
             pw = line2.strip().lower()
-            print("guessing pw = ["+pw+"]")
+            # print("guessing pw = ["+pw+"]")
             if firstPWCounter == 0:
                 firstPWCounter+=1
                 hashedPotentialPW = encodeToSHA256(pw)
-                print("hpw="+hashedPW)
-                print("ppw="+hashedPotentialPW)
+                # print("hpw="+hashedPW)
+                # print("ppw="+hashedPotentialPW)
                 if hashedPW == hashedPotentialPW:
                     f = open(resultsFilename,"a")
                     f.write(username+":"+pw)
+                    SUCCESS_CRACKS+=1
                     print("hit # "+str(SUCCESS_CRACKS)+" = "+(username+":"+pw))
                     f.close()
-                    ref.close()
                     break
-        
+            else:
+                firstPWCounter+=1
+                refDup1 = open(potentialPWFilename,"r")
+                for line3 in refDup1:
+                    pwPt2 = line3.strip().lower()
+                    pwConcat = pw+pwPt2
+                    # print("guessing pw = ["+pwConcat+"]")
+                    hashedPotentialPW = encodeToSHA256(pwConcat)
+                    if hashedPW == hashedPotentialPW:
+                        f = open(resultsFilename,"a")
+                        f.write(username+":"+pwConcat)
+                        SUCCESS_CRACKS+=1
+                        print("hit! # "+str(SUCCESS_CRACKS)+" = "+(username+":"+pwConcat))
+                        f.close()
+                        break
+        ref.close()
+
+def verbatimGuessPt3(pwFilename,potentialPWFilename,resultsFilename):
+    f = open(resultsFilename,"w")
+    f.write("")
+    f.close()
+    global SUCCESS_CRACKS
+    pwToBeCracked = open(pwFilename,"r")
+    for line in pwToBeCracked:
+        current = line.strip().lower().split(":")
+        username = current[0]
+        pwString = current[1]
+        hashedPW = pwString[3:]
+        pwSalt = hashedPW[:8]
+        for line2 in open(potentialPWFilename,"r"):
+            startHashing = time.time()
+            trialPWString = line2.strip().lower()
+            saltCocatPW = pwSalt+trialPWString
+            saltedHash = encodeToSHA256(saltCocatPW)
+            finalTentativePW = "$5$"+pwSalt+"$"+saltedHash
+            endHashingTime = time.time()
+            totalTimeHashing = str(startHashing - endHashingTime)
+            if finalTentativePW == pwString:
+                hit = username+":"+trialPWString
+                f = open(resultsFilename,"a")
+                f.write(hit)
+                f.close()
+                print(hit)
+    print("hashing time:"+totalTimeHashing)
             
-            # else:
-            #     firstPWCounter+=1
-            #     refDup1 = open(potentialPWFilename,"r")
-            #     for line2 in refDup1:
-            #         pwPt2 = line2.strip().lower()
-            #         pwConcat = pw+pwPt2
-            #         hashedPotentialPW = encodeToSHA256(pwPt2)
-            #         if hashedPW == hashedPotentialPW:
-            #             f = open(resultsFilename,"a")
-            #             f.write(username+":"+pwConcat)
-            #             print("hit # "+str(SUCCESS_CRACKS)+" = "+(username+":"+pwConcat))
-            #             ref.close()
-            #             f.close()
-            #             break
 
 def decodePt2(pwFilename, potentialPWFilename, resultsFilename):
     start = time.time()
@@ -253,7 +284,8 @@ def main():
     # decode("part_2_pw.txt",multiThreadBatchMakeDouble("pt2PotentialPWs.txt",36), "cracked2.txt")
     # decode("part_2_pw.txt","pt2PotentialPWs.txt", "cracked2.txt")
     # decodePt2("part_1_pw.txt","possible_passwords_p1.txt", "part_1_pt2_results.txt")
-    decodePt2("jondich.txt","moose.txt", "part_1_pt2_results.txt")
+    # decodePt2("jondich.txt","moose.txt", "part_1_pt2_results.txt")
+    # verbatimGuessPt3("jondich_pt3.txt","moose.txt","cracked3.txt")
     endWholeProgram = time.time()
     timeTaken = endWholeProgram-start
     print("TOTAL TIME TAKEN: "+str(timeTaken)+" seconds")
