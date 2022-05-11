@@ -1,0 +1,54 @@
+Author Name: Kuo Wang
+
+Part 1
+Total time: 115.1012499332428 seconds
+Number of hashes computed: 267751
+Passwords cracked: 2805
+Time per hash computed: 3.6862562472708324e-06 seconds
+Time per password cracked: 0.04103431370169084
+Passwords cracked per number of hashes computed: 0.010476151349574792
+
+Part 2
+Total time: 3813.9606692790985 seconds
+Number of hashes computed: 23163544 
+Passwords cracked: 3
+Time per hash computed: 1.907911867137395e-06 seconds
+Time per password cracked: 1261.6558918158214 seconds
+Passwords cracked per number of hashes computed: 1.295138602279513e-07
+
+Part 3
+Total time: [user time from a "time" command]
+Number of hashes computed: [count of the # of hashes computed] 
+Passwords cracked: [number cracked]
+Time per hash computed: [seconds per hash]
+Time per password cracked: [seconds per password]
+Passwords cracked per number of hashes computed: [passwords per hash]
+
+Analysis:
+
+- Did your time per hash computed change between phases? By what factor? Why?
+Yes, by a small factor (2 between p1 and p2). This is because that the SHA256 
+hashing function's runtime itself is largely similar.
+
+- Did your time per password crack change between phases? By what factor? Why?
+Yes, by a factor of 31,525. This is because each password has greater entropy,
+and the entropy makes the brute force program go through many more possibilities.
+
+- Suppose you wanted to precompute all the possible password hashes for each
+so you could just look up the password in a table indexed by the hash. How much
+memory would be required for each phase?
+
+For phase 1, we have 267751 passwords so 267751*(32+16+32)=21.42008 MB
+
+For phase 2, we have 267751*267751 passwords so 267751*267751*(32+16+32)=5 735.24784 GB
+
+For phase 3, we have 267751*16^8 passwords so 267751*16^8*(32+16+32) = 91.9985431 PB
+
+- Give 3-4 reasons we should store password hashes and not the passwords themselves.
+Think in terms of threats, who the attackers might be, etc.
+
+1. In the event of a data leak, the thief still cannot access password-secured accounts when the values
+are secure hashed.
+2. During transmission, the hashed password is useless to an eavesdropper so the password is secure when the hashing happens before the data is sent out from the sender.
+3. In terms of password storage in memory, all securely hashed password take up the same memory space.
+this makes storage optimization easier because there will be less spare chunks in the disk than if varied-length plaintext passwords are used.
